@@ -29,4 +29,13 @@ export class LoginPageComponent {
     });
   }
 
+  public test = () => {
+    this .authService.test().subscribe({
+      next: () => {
+        console.log('done');
+      },
+      error: err => console.error(err)
+    });
+  }
+
 }

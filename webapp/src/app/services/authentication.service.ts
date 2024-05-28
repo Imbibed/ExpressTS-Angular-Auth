@@ -16,4 +16,8 @@ export class AuthenticationService {
   public removeToken = () => {
     localStorage.removeItem('access_token');
   }
+
+  public test = (): Observable<void> => {
+    return this.http.get<void>('http://localhost:3000/api/users/toto');
+  }
 }
