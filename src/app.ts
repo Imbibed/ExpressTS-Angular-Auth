@@ -2,10 +2,10 @@ import express, {Express} from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-import indexRouter from "./routes";
-import usersRouter from "./routes/users";
+import usersRouter from "./routes/usersRoutes";
 import http from "http";
 import Debug from "debug";
+import authRouter from "./routes/authenticationRoutes";
 
 const debug = Debug("backtonodejs:server");
 
@@ -17,8 +17,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public/browser')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/auth', authRouter);
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/browser/index.html'));
+});
 
 const port = normalizePort(process.env.PORT ?? '3000');
 app.set('port', port);
