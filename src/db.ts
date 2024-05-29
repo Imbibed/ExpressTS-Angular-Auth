@@ -16,3 +16,16 @@ export const connectDB = async () => {
         throw err;
     }
 }
+
+export const createUsersIndexes = async () => {
+    try{
+        const mydb: Db = await connectDB();
+        const users_collection = mydb.collection('users');
+
+        await users_collection.createIndex({username: 1}, {unique: true});
+        await users_collection.createIndex({email: 1}, {unique: true});
+        console.log('Indexes created on users collection');
+    } catch(err) {
+        console.error(err);
+    }
+}

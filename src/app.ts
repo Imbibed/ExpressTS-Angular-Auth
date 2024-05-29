@@ -6,6 +6,7 @@ import usersRouter from "./routes/usersRoutes";
 import http from "http";
 import Debug from "debug";
 import authRouter from "./routes/authenticationRoutes";
+import {createUsersIndexes} from "./db";
 
 const debug = Debug("backtonodejs:server");
 
@@ -31,6 +32,7 @@ const server = http.createServer(app);
 
 server.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
+    createUsersIndexes().then().catch(console.error);
 });
 server.on('error', onError);
 server.on('listening', onListening);

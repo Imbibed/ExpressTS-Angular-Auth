@@ -11,8 +11,8 @@ export const getUserByUsername = async (username: string): Promise<User | null> 
         const collection: Collection<User> = db.collection(db_collection_name);
         const user: WithId<User> | null = await collection.findOne({username: username});
         if(user){
-            const { username, password } = user;
-            return new User(username, password);
+            const { _id, username, password, email } = user;
+            return new User(_id, username, password, email);
         }  else {
             throw new CannotFoundUserError(username);
         }
