@@ -1,15 +1,22 @@
 import express, {Request, Response, NextFunction, Router} from "express";
 import { authenticationService } from "../services/authenticationService";
+import {CannotFoundUserError} from "../Error/UserError";
 const authRouter: Router = express.Router();
 
-authRouter.post('/', function(req: Request, res: Response, next: NextFunction): void {
+authRouter.post('/', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const username: string = req.body["username"] as string;
     const password: string = req.body["password"] as string;
-    if(authenticationService.verifyCredentials(username, password)){
-        const token: string = authenticationService.generateToken(username);
-        res.status(200).send({token: token});
-    }else{
-        res.status(401).send();
+    try{
+        if(await authenticationService.verifyCredentials(username, password)){
+            const token: string = authenticationService.generateToken(username);
+            res.status(200).send({token: token});
+        }else{
+            res.status(401).send();
+        }
+    } catch (err) {
+        if (err instanceof CannotFoundUserError){
+            res.status(404).send(err.message);
+        }
     }
 });
 

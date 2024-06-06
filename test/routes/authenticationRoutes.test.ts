@@ -1,6 +1,9 @@
 import request from 'supertest';
-import { MongoClient } from 'mongodb';
-import app from '../../src/app'; // Importer votre application Express
+import {MongoClient, ObjectId} from 'mongodb';
+import app from '../../src/app';
+import {User} from "../../src/Model/User"; // Importer votre application Express
+import {userRepository} from "../../src/repositories/usersRepository";
+import {CannotFoundUserError} from "../../src/Error/UserError";
 
 describe('Test d\'intégration des routes /auth', () => {
     let connection: MongoClient;
@@ -9,6 +12,8 @@ describe('Test d\'intégration des routes /auth', () => {
     beforeAll(async () => {
         connection = await MongoClient.connect('mongodb://localhost:27017');
         db = connection.db('test');
+        await userRepository.createUser('user-test', 'test-password', 'user-test@gmail.com');
+
         app.locals.db = db;
     });
 
@@ -20,11 +25,19 @@ describe('Test d\'intégration des routes /auth', () => {
 
         const response = await request(app)
             .post('/auth')
-            .send({username: "jules", password: "jules"})
+            .send({username: "user-test", password: "test-password"})
             .expect(200);
         const token: string = response.body['token'] as string;
         expect(token.length != 0).toBe(true);
     });
 
-    // Ajoutez d'autres tests selon vos besoins
+    it('J\'ai une erreur si le user n\' pas trouvé', async () => {
+
+        const response = await request(app)
+            .post('/auth')
+            .send({username: "jules", password: "test-password"})
+            .expect(404);
+        const expectedErrorMsg = new CannotFoundUserError('jules');
+        expect(response.text).toBe(expectedErrorMsg.message);
+    });
 });
