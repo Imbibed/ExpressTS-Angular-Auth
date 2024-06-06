@@ -1,14 +1,16 @@
-import {
-    getUserByUsername as repoGetUserByUsername,
-    createUser as repoCreateUser
-} from "../repositories/usersRepository";
+import { userRepository } from "../repositories/usersRepository";
 import {User} from "../Model/User";
 import {ObjectId} from "mongodb";
 
-export const getUserByUsername = (username: string): Promise<User | null> => {
-    return repoGetUserByUsername(username);
+const getUserByUsername = (username: string): Promise<User | null> => {
+    return userRepository.getUserByUsername(username);
 }
 
-export const createUser = (username: string, password: string, email: string): Promise<ObjectId | null> => {
-    return repoCreateUser(username, password, email);
+const createUser = (username: string, password: string, email: string): Promise<ObjectId | null> => {
+    return userRepository.createUser(username, password, email);
+}
+
+export const userService = {
+    getUserByUsername,
+    createUser
 }

@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public/browser')));
 
 app.use('/api/users', usersRouter);
-app.use('/api/auth', authRouter);
+app.use('/auth', authRouter);
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/browser/index.html'));
@@ -36,6 +36,8 @@ server.listen(port, () => {
 });
 server.on('error', onError);
 server.on('listening', onListening);
+
+export default app;
 
 /**
  * Normalize a port into a number, string, or false.

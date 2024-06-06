@@ -1,6 +1,6 @@
 import {Db, MongoClient} from "mongodb";
 
-const db_url = 'mongodb://localhost:27017';
+const db_url = 'mongodb://root:example@localhost:27017';
 const db_name = 'template-db';
 
 let db: Db;

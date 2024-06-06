@@ -1,5 +1,5 @@
 import express, {Request, Response, NextFunction, Router} from "express";
-import {createUser as servCreateUser, getUserByUsername as servGetUserByUsername} from '../services/usersService';
+import { userService } from '../services/usersService';
 import {body, validationResult} from 'express-validator';
 
 let usersRouter: Router = express.Router();
@@ -9,9 +9,9 @@ usersRouter.get('/', function(req: Request, res: Response, next: NextFunction): 
   res.send('respond with a resource');
 });
 
-usersRouter.get('/:username', async (req, res) => {
+usersRouter.get('/:username', async (req, res)=> {
   try {
-    await servGetUserByUsername(req.params.username);
+    await userService.getUserByUsername(req.params.username);
     res.status(200).send('job is done');
   } catch (err) {
     res.status(404).send(err);
@@ -29,7 +29,7 @@ const validateRequest = (req: Request, res: Response, next: NextFunction) => {
 const createUser = async (req: Request, res: Response) => {
   const {username, password, email} = req.body;
   try {
-      await servCreateUser(username, password, email);
+      await userService.createUser(username, password, email);
       res.status(200).send(username);
   } catch(err) {
       res.status(409).send(username);
