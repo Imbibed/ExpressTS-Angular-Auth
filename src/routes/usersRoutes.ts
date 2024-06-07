@@ -1,6 +1,7 @@
 import express, {Request, Response, NextFunction, Router} from "express";
 import { userService } from '../services/usersService';
 import {body, validationResult} from 'express-validator';
+import { tokenService } from '../services/tokenService';
 
 let usersRouter: Router = express.Router();
 
@@ -9,7 +10,7 @@ usersRouter.get('/', function(req: Request, res: Response, next: NextFunction): 
   res.send('respond with a resource');
 });
 
-usersRouter.get('/:username', async (req, res)=> {
+usersRouter.get('/:username', tokenService.verifyToken, async (req, res)=> {
   try {
     await userService.getUserByUsername(req.params.username);
     res.status(200).send('job is done');
@@ -38,6 +39,7 @@ const createUser = async (req: Request, res: Response) => {
 
 usersRouter.post(
     '/',
+    tokenService.verifyToken,
     [
         body('username')
             .isAlphanumeric()

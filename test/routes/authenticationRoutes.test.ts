@@ -1,20 +1,26 @@
 import request from 'supertest';
-import {MongoClient, ObjectId} from 'mongodb';
+import {Collection, MongoClient, ObjectId} from 'mongodb';
 import app from '../../src/app';
 import {User} from "../../src/Model/User"; // Importer votre application Express
 import {userRepository} from "../../src/repositories/usersRepository";
 import {CannotFoundUserError} from "../../src/Error/UserError";
+import {afterEach} from "node:test";
 
 describe('Test d\'intégration des routes /auth', () => {
     let connection: MongoClient;
     let db: any;
 
     beforeAll(async () => {
-        connection = await MongoClient.connect('mongodb://localhost:27017');
+        connection = await MongoClient.connect('mongodb://root:example@localhost:27017');
         db = connection.db('test');
         await userRepository.createUser('user-test', 'test-password', 'user-test@gmail.com');
 
         app.locals.db = db;
+    });
+
+    afterEach(async () => {
+        const collection: Collection<User> = db.collection('users')
+        await collection.deleteMany({});
     });
 
     afterAll(async () => {
