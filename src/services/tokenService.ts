@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import {Request,Response,NextFunction} from "express";
 
-const secret = 'secret'
-const tokenExpiration = "1h";
+const secret = process.env.SECRET || 'secret';
+const tokenExpiration = process.env.TOKEN_EXPIRATION || "1h";
 const generateToken = (username: string): string => {
     const payload = {username: username, role: 'TODO'}
     return jwt.sign(payload, secret, {expiresIn: tokenExpiration})

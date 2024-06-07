@@ -5,13 +5,15 @@ import { ValidationError } from 'express-validator';
 import { tokenService } from '../../src/services/tokenService';
 import {User} from "../../src/Model/User";
 import {afterEach} from "node:test";
+import {Server} from "node:http";
 
+const db_url = process.env.DB_URL_INTEGRATION_TEST || "mongodb://root:example@localhost:27017";
 describe('Test d\'intégration des routes /api/users', () => {
     let connection: MongoClient;
     let db: any;
 
     beforeAll(async () => {
-        connection = await MongoClient.connect('mongodb://root:example@localhost:27017');
+        connection = await MongoClient.connect(db_url);
         db = connection.db('test');
         app.locals.db = db;
     });

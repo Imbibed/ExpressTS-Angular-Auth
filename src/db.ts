@@ -1,7 +1,7 @@
 import {Db, MongoClient} from "mongodb";
 
-const db_url = 'mongodb://root:example@localhost:27017';
-const db_name = 'template-db';
+const db_url = process.env.DB_URL || "mongodb://root:example@localhost:27017";
+const db_name = process.env.DB_NAME || "template-db";
 
 let db: Db;
 

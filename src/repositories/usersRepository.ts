@@ -5,7 +5,7 @@ import {CannotCreateUser, CannotFoundUserError} from "../Error/UserError";
 import bcrypt from "bcrypt";
 
 const db_collection_name = 'users';
-const saltRounds = 10;
+const saltRounds: number | 10 = Number(process.env.SALT_ROUNDS) || 10;
 
 const getUserByUsername = async (username: string): Promise<User | null> => {
     try {

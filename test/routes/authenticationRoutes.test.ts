@@ -5,13 +5,16 @@ import {User} from "../../src/Model/User"; // Importer votre application Express
 import {userRepository} from "../../src/repositories/usersRepository";
 import {CannotFoundUserError} from "../../src/Error/UserError";
 import {afterEach} from "node:test";
+import {Server} from "node:http";
+
+const db_url = process.env.DB_URL_INTEGRATION_TEST || "mongodb://root:example@localhost:27017";
 
 describe('Test d\'intégration des routes /auth', () => {
     let connection: MongoClient;
     let db: any;
 
     beforeAll(async () => {
-        connection = await MongoClient.connect('mongodb://root:example@localhost:27017');
+        connection = await MongoClient.connect(db_url);
         db = connection.db('test');
         await userRepository.createUser('user-test', 'test-password', 'user-test@gmail.com');
 
